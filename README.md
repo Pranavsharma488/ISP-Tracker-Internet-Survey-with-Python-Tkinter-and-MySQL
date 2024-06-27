@@ -1,4 +1,4 @@
-# lecture-0-Introduction-To-The-Course
+# CIPHER SCHOOL /lecture-0-Introduction-To-The-Course
 
 COURSE STRUCTURE
 
