@@ -1,62 +1,73 @@
-# CIPHER SCHOOL /lecture-0-Introduction-To-The-Course
+NetInsight: ISP Survey System using Python Tkinter & MySQL
 
-COURSE STRUCTURE
+Overview
 
-1.Introduction to Data Science
-•Overview of data science and its importance
-•Introduction to the data science workflow
-•Key skills and tools in data science
+NetInsight is a GUI-based Internet Service Provider (ISP) survey system developed using Python Tkinter for the front-end and MySQL as the database. The system allows users to log in and submit survey responses about their internet usage, speed, and disruptions.
 
-2.Setting Up Your Environment
-•Anaconda Setup and Overview: Introduction to Anaconda, installation, and management of Python
-•environments. Google Colab Notebook Overview: Getting started with Google Colab for Python programming and data science projects.
-•Version Control with GIT/GITLAB: Basics of version control, using Git for project management, introduction to GitLab for collaboration.
+Features
 
-3.Advanced Excel for Data Analysis
-•Advanced formulas and functions
-•VData cleaning and preparation techniques.
-•Pivot Tables, PivotCharts, and Power Query
-•Introduction to Excel macros and VBA for automation
+-User Authentication: Secure login with predefined credentials.
+-Survey Form: Collects user data on internet speed, ISP, and disruptions.
+-MySQL Database Integration: Stores survey responses for analysis.
+-GUI Interface: Built using Tkinter for a user-friendly experience.
+-Error Handling: Provides alerts for missing fields or database errors.
 
-4. Python for Data Science
-•Python fundamentals (variables, data types, conditionals, loops)
-•Functions, lambda expressions, and error handling
-•Working with data using Pandas
-•Data manipulation and analysis with NumPy
+Technologies Used
 
-5.Data Visualization
-•Principles of data visualization
-•Introduction to Matplotlib and Seaborn
-•Creating interactive visualizations with Plotly
+-Python (Tkinter for GUI)
+-MySQL (Database for storing survey responses)
+-MySQL Connector (To connect Python with MySQL)
 
-6.Introduction to Power BI
-•Getting started with Power BI Desktop
-•Data modeling and DAX basics
-•Creating dashboards and reports
-•Power BI Service basics for sharing and collaboration
+Installation
+-Prerequisites
+Make sure you have the following installed on your system:
+-Python 3.x
+-MySQL Server
+-Required Python libraries
 
-7.Data Preprocessing Concepts
-•Data cleaning and normalization
-•Handling missing data
-•Feature engineering and selection
 
-8.Statistics Deep Dive
-•Advanced statistical measures and distributions Correlation and regression analysis
-•Hypothesis testing and inferential statistics
+Steps to Set Up
 
-9.Major Machine Learning Algorithms
-•Supervised learning (linear regression, logistic regression, decision trees, random forests, SVMs) 
-•Unsupervised learning (k-means clustering, hierarchical clustering, PCA) 
-•Introduction to neural networks and deep learning
+1.Install dependencies:
+-pip install mysql-connector-python
 
-PROJECTS
+2.Create MySQL Database and Table:
+CREATE DATABASE registration;
+CREATE TABLE survey_responses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    age VARCHAR(20),
+    state VARCHAR(50),
+    isp VARCHAR(50),
+    household VARCHAR(20),
+    hours VARCHAR(20),
+    download_speed VARCHAR(50),
+    upload_speed VARCHAR(50),
+    disruptions VARCHAR(10)
+);
 
-Project 1: Building a Chatbot
-•Introduction to NLP and chatbot frameworks
-•Designing and training a simple chatbot
-•Integrating the chatbot with Python or web applications
+3.Update MySQL Credentials: Modify the connect_to_db() function in
+  con = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Jammu123@", 
+            database="registration"  
+        )
 
-Project 2: Image Classification Project
-•Basics of image processing and computer vision CNNs (Convolutional Neural Networks)
-•Introduction to Building and training a simple image classifier
-•Evaluating model performance
+4.Run the application:
+python main.py
+
+
+Usage
+
+-Run the script and log in with:
+ Username: pranav
+ Password: 123456
+
+-Fill out the survey form and submit.
+-The responses are stored in the MySQL database.
+
+
+
+
+
