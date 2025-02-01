@@ -1,0 +1,152 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+import mysql.connector
+
+def connect_to_db():
+    try:
+        con = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Jammu123@", 
+            database="registration"  
+        )
+        return con
+    except mysql.connector.Error as err:
+        messagebox.showerror("Database Error", str(err))
+        return None
+
+# Function to handle login
+def login():
+    username = username_var.get()    
+    password = password_var.get()
+
+    if username == "pranav" and password == "123456":
+        messagebox.showinfo("Success", "Login Successful!")
+        show_survey_form()
+    else:
+        messagebox.showerror("Error", "Invalid Username or Password!")
+
+# Function to show the survey form
+def show_survey_form():
+    login_frame.pack_forget()  
+    survey_frame.pack(pady=20)  
+
+# Function to submit survey data
+def submit_survey():
+
+    name = name_var.get()
+    age = age_var.get()
+    state = state_var.get()
+    isp = isp_var.get()
+    household = household_var.get()
+    hours = hours_var.get()
+    download_speed = download_speed_var.get()
+    upload_speed = upload_speed_var.get()
+    disruptions = disruptions_var.get()
+
+    if not (name and age and state and isp and household and hours and download_speed and upload_speed and disruptions):
+        messagebox.showerror("Error", "All fields marked with * are required!")
+        return
+
+    # Connect to the database and insert data
+    con = connect_to_db()
+    if con:
+        cur = con.cursor()
+        try:
+            cur.execute("""
+                INSERT INTO survey_responses (name, age, state, isp, household, hours, download_speed, upload_speed, disruptions)  
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (name, age, state, isp, household, hours, download_speed, upload_speed, disruptions))                                                
+
+            con.commit()
+            messagebox.showinfo("Success", "Survey Submitted Successfully!")
+            survey_frame.pack_forget()  
+            login_frame.pack(pady=20) 
+        except mysql.connector.Error as err:
+            messagebox.showerror("Database Error", str(err))
+        finally:
+            cur.close()
+            con.close()
+
+
+root = tk.Tk()
+root.geometry('700x700')
+root.title("Login and Survey Form")
+
+
+login_frame = tk.Frame(root)
+login_frame.pack(pady=20)
+
+username_var = tk.StringVar()
+password_var = tk.StringVar()
+
+tk.Label(login_frame, text="Username:", font=("Arial", 12)).grid(row=0, column=0, padx=10, pady=10)
+tk.Entry(login_frame, textvariable=username_var, font=("Arial", 12)).grid(row=0, column=1, padx=10, pady=10)
+
+tk.Label(login_frame, text="Password:", font=("Arial", 12)).grid(row=1, column=0, padx=10, pady=10)
+tk.Entry(login_frame, textvariable=password_var, show="*", font=("Arial", 12)).grid(row=1, column=1, padx=10, pady=10)
+
+login_btn = ttk.Button(login_frame, text="Login", command=login)
+login_btn.grid(row=2, columnspan=2, pady=20)
+
+
+survey_frame = tk.Frame(root)
+
+name_var = tk.StringVar()
+age_var = tk.StringVar()
+state_var = tk.StringVar()
+isp_var = tk.StringVar()
+household_var = tk.StringVar()
+hours_var = tk.StringVar()
+download_speed_var = tk.StringVar()
+upload_speed_var = tk.StringVar()
+disruptions_var = tk.StringVar()
+
+tk.Label(survey_frame, text="Section 1 of 3: Personal Information", font=("Arial", 14)).grid(row=0, columnspan=2, pady=10)
+
+tk.Label(survey_frame, text="Name*:", font=("Arial", 12)).grid(row=1, column=0, sticky="w", pady=5)
+tk.Entry(survey_frame, textvariable=name_var, font=("Arial", 12)).grid(row=1, column=1, pady=5)
+
+tk.Label(survey_frame, text="Age*:", font=("Arial", 12)).grid(row=2, column=0, sticky="w", pady=5)
+age_opts = ["18-24", "25-34", "35-44", "45-55", "55+"]
+ttk.OptionMenu(survey_frame, age_var, "Select Age Group", *age_opts).grid(row=2, column=1, pady=5)
+
+tk.Label(survey_frame, text="State*:", font=("Arial", 12)).grid(row=3, column=0, sticky="w", pady=5)
+tk.Entry(survey_frame, textvariable=state_var, font=("Arial", 12)).grid(row=3, column=1, pady=5)
+
+
+tk.Label(survey_frame, text="Section 2 of 3: Internet Usage", font=("Arial", 14)).grid(row=4, columnspan=2, pady=10)
+
+tk.Label(survey_frame, text="Internet Service Provider*:", font=("Arial", 12)).grid(row=5, column=0, sticky="w", pady=5)
+isp_opts = ["JIO", "AIRTEL", "VI", "BSNL", "Wi-fi", "Other"]
+ttk.OptionMenu(survey_frame, isp_var, "Select ISP", *isp_opts).grid(row=5, column=1, pady=5)
+
+tk.Label(survey_frame, text="Household Members (using internet)*:", font=("Arial", 12)).grid(row=6, column=0, sticky="w", pady=5)
+household_opts = ["1", "2-3", "4-5"]
+ttk.OptionMenu(survey_frame, household_var, "Select Members", *household_opts).grid(row=6, column=1, pady=5)
+
+tk.Label(survey_frame, text="Hours Per Day Using Internet*:", font=("Arial", 12)).grid(row=7, column=0, sticky="w", pady=5)
+hours_opts = ["Less than 1 hour", "1-3 hours", "4-6 hours", "7+ hours"]
+ttk.OptionMenu(survey_frame, hours_var, "Select Hours", *hours_opts).grid(row=7, column=1, pady=5)
+
+
+tk.Label(survey_frame, text="Section 3 of 3: Internet Speed", font=("Arial", 14)).grid(row=8, columnspan=2, pady=10)
+
+tk.Label(survey_frame, text="Download Speed*:", font=("Arial", 12)).grid(row=9, column=0, sticky="w", pady=5)
+download_opts = ["Less than 5 Mbps", "10-25 Mbps", "25-50 Mbps", "50-100 Mbps", "More than 100 Mbps"]
+ttk.OptionMenu(survey_frame, download_speed_var, "Select Speed", *download_opts).grid(row=9, column=1, pady=5)
+
+tk.Label(survey_frame, text="Upload Speed*:", font=("Arial", 12)).grid(row=10, column=0, sticky="w", pady=5)
+upload_opts = ["Less than 5 Mbps", "5-10 Mbps", "10-25 Mbps", "More than 50 Mbps"]
+ttk.OptionMenu(survey_frame, upload_speed_var, "Select Speed", *upload_opts).grid(row=10, column=1, pady=5)
+
+tk.Label(survey_frame, text="Frequent Disruptions?*:", font=("Arial", 12)).grid(row=11, column=0, sticky="w", pady=5)
+disruptions_opts = ["Yes", "No"]
+ttk.OptionMenu(survey_frame, disruptions_var, "Select Option", *disruptions_opts).grid(row=11, column=1, pady=5)
+
+submit_btn = ttk.Button(survey_frame, text="Submit Survey", command=submit_survey)
+submit_btn.grid(row=12, columnspan=2, pady=20)
+
+
+root.mainloop()
+
